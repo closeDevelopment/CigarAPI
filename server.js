@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -5,7 +6,7 @@ const port = 3000; // The port your API will run on
 
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://localhost:27017/cigardb', {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -39,11 +40,9 @@ app.get('/api/v1/cigars/brands/:brandName/lines', async (req, res) => {
 app.post('/api/v1/cigars/lines/batch', async (req, res) => {
   const data = req.body; // Expects an array of cigar line objects
   if (!Array.isArray(data)) {
-    return res
-      .status(400)
-      .json({
-        message: 'Request body must be an array of cigar line objects.',
-      });
+    return res.status(400).json({
+      message: 'Request body must be an array of cigar line objects.',
+    });
   }
 
   const results = [];
